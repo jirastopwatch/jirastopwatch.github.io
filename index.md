@@ -18,6 +18,13 @@ description: |
   Jira StopWatch is a desktop tool for recording time spent on different Jira issues.
   It is fully integrated with Jira, for automatic fetching issues and submitting worklogs.
   And it is open source!
+
+header-includes: |
+  <style>
+  html {
+    background-color: #f0f0f0;
+  }
+  </style>
 ---
 
 # Welcome to the *Jira StopWatch* wiki!
