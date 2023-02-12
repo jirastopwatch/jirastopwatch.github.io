@@ -9,4 +9,5 @@ clean:
 	rm -f *.bak *~
 
 %.html: %.md
+	@[ -d _site ] || mkdir -p _site
 	$(MARKDOWN) $< --output _site/$@
