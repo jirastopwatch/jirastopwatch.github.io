@@ -31,10 +31,6 @@ header-includes: |
 
 This is the new home of the documentation previously hosted on http://jirastopwatch.com, which is sadly no longer maintained.
 
-# ![jirastopwatch-logo] Jira StopWatch
-
-> Not *more* timetracking... just *easier* timetracking...
-
 *Jira StopWatch* is a desktop tool for recording time spent on different Jira issues.
 It is fully integrated with Jira, for automatic fetching issues and submitting worklogs.
 And it is *open source*.
