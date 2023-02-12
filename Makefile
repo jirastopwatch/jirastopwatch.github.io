@@ -1,6 +1,6 @@
 .POSIX:
 
-MARKDOWN = pandoc --from gfm-yaml_metadata_block+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone
+MARKDOWN = pandoc --from gfm+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone
 
 all: $(patsubst %.md,%.html,$(wildcard *.md))
 
