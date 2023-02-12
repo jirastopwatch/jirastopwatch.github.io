@@ -1,7 +1,14 @@
 ---
-title-meta: Jira StopWatch
-author-meta: Y. Meyer-Norwood
-...
+title: Jira StopWatch
+author:
+  - Y. Meyer-Norwood
+keywords:
+  - Jira
+  - StopWatch
+  - Jira StopWatch
+abstract: |
+  This is the new home of the documentation previously hosted on http://jirastopwatch.com, which is sadly no longer maintained.
+---
 
 # Welcome to the *Jira StopWatch* wiki!
 
@@ -9,7 +16,7 @@ This is the new home of the documentation previously hosted on http://jirastopwa
 
 # ![jirastopwatch-logo] Jira StopWatch
 
-> Not *more* timetracking... <br/>just *easier* timetracking.
+> Not *more* timetracking... just *easier* timetracking.
 
 *Jira StopWatch* is a desktop tool for recording time spent on different Jira issues.
 It is fully integrated with Jira, for automatic fetching issues and submitting worklogs.
