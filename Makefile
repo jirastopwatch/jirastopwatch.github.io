@@ -7,4 +7,4 @@ clean:
 	rm -f *.bak *~
 
 %.html: %.md
-	pandoc --from gfm+yaml_metadata_block --to html --standalone $< --output $@
+	pandoc --from markdown+yaml_metadata_block --to html --standalone $< --output $@
