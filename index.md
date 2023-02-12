@@ -1,3 +1,8 @@
+---
+Title: Jira StopWatch
+Author: Y. Meyer-Norwood
+---
+
 # Welcome to the *Jira StopWatch* wiki!
 
 This is the new home of the documentation previously hosted on http://jirastopwatch.com, which is sadly no longer maintained.
