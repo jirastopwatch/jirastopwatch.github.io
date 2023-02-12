@@ -1,6 +1,6 @@
 ---
-Title: Jira StopWatch
-Author: Y. Meyer-Norwood
+title: Jira StopWatch
+author: Y. Meyer-Norwood
 ---
 
 # Welcome to the *Jira StopWatch* wiki!
