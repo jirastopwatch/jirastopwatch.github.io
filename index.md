@@ -91,10 +91,10 @@ Please use [Github][jirastopwatch-repo] for this.
 
 [jirastopwatch-repo]: https://github.com/jirastopwatch/jirastopwatch
 [jirastopwatch-news]: https://github.com/jirastopwatch/jirastopwatch/releases/latest
-[jirastopwatch-logo]: https://github.com/jirastopwatch/jirastopwatch/blob/main/docs/img/logo.png
-[jirastopwatch-img1]: https://github.com/jirastopwatch/jirastopwatch/blob/main/docs/img/screen1.png
-[jirastopwatch-img2]: https://github.com/jirastopwatch/jirastopwatch/blob/main/docs/img/screen2.png
-[jirastopwatch-img3]: https://github.com/jirastopwatch/jirastopwatch/blob/main/docs/img/screen3.png
+[jirastopwatch-logo]: https://github.com/jirastopwatch/jirastopwatch/raw/main/docs/img/logo.png
+[jirastopwatch-img1]: https://github.com/jirastopwatch/jirastopwatch/raw/main/docs/img/screen1.png
+[jirastopwatch-img2]: https://github.com/jirastopwatch/jirastopwatch/raw/main/docs/img/screen2.png
+[jirastopwatch-img3]: https://github.com/jirastopwatch/jirastopwatch/raw/main/docs/img/screen3.png
 
 [autism-speaks-logo]: https://act.autismspeaks.org/images/content/pagebuilder/logo-horizontal.png
 [autism-speaks-site]: https://act.autismspeaks.org/site/Donation2?df_id=1500&mfc_pref=T&1500.donation=form1&s_src=jirastopwatch
