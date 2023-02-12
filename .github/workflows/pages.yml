@@ -26,8 +26,6 @@ jobs:
       - run: make clean all
 
       - uses: actions/upload-pages-artifact@v1
-        with:
-          path: '.'
 
   deploy:
     if: github.ref == 'refs/heads/main'
