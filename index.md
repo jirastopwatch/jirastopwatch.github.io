@@ -21,9 +21,6 @@ description: |
 
 header-includes: |
   <style>
-  html {
-    background-color: #f0f0f0;
-  }
   </style>
 ---
 
