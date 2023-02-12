@@ -9,4 +9,4 @@ clean:
 	rm -f *.bak *~
 
 %.html: %.md
-	$(MARKDOWN) $< --output $@
+	$(MARKDOWN) $< --output $@ --include-after-body=_footer.html
