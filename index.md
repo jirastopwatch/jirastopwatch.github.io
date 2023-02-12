@@ -1,7 +1,7 @@
 ---
 title-meta: Jira StopWatch
 author-meta: Y. Meyer-Norwood
----
+...
 
 # Welcome to the *Jira StopWatch* wiki!
 
