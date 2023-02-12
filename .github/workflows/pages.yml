@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/configure-pages@v3
 
-      - run: echo building... # TODO: build site here
+      - run: make clean all
 
       - uses: actions/upload-pages-artifact@v1
         with:
