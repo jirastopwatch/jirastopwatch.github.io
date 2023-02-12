@@ -90,6 +90,25 @@ Control remaining estimates.
 
 [Jira StopWatch tutorial] from [Carsten Gehling] on [Vimeo].
 
+# License
+
+[Apache License Version 2.0] - please read [LICENSE.md]
+
+[![autism-speaks-logo]][autism-speaks-site]
+
+Jira StopWatch is charityware. If you like the product, [please consider donating to Autism Speaks][autism-speaks-site].
+
+# Get involved!
+
+Get the source code at [Github][jirastopwatch-repo].
+Pull requests are more than welcome!
+
+Bug reports, feature requests etc. are welcome.
+Please use [Github][jirastopwatch-repo] for this.
+
+* © 2023 Y. Meyer-Norwood
+* © 2020 Dan Tulloh
+
 <!-- LINKS -->
 
 [jirastopwatch-repo]: https://github.com/jirastopwatch/jirastopwatch
@@ -105,3 +124,6 @@ Control remaining estimates.
 [Jira StopWatch tutorial]: https://vimeo.com/146107370
 [Carsten Gehling]: https://vimeo.com/user4096975
 [Vimeo]: https://vimeo.com
+
+[LICENSE.md]: https://github.com/norwd/jirastopwatch/blob/main/LICENSE.md
+[Apache License Version 2.0]: http://www.apache.org/licenses/LICENSE-2.0
