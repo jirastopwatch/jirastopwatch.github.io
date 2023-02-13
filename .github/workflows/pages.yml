@@ -17,12 +17,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/configure-pages@v3
 
-      - run: echo Building.... # TODO: Fake step, site is already in html
-
-      - name: Validate HTML
-        uses: Cyb3r-Jak3/html5validator-action@master
-        with:
-          root: .
+      - run: sudo apt install tidy
+      - run: find . -name '*.html' | xargs tidy -indent --warp 0 --output-html -modify
 
       - uses: actions/upload-pages-artifact@v1
         with:
