@@ -18,7 +18,7 @@ jobs:
       - uses: actions/configure-pages@v3
 
       - run: sudo apt install tidy
-      - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -modify
+      - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
       - uses: actions/upload-pages-artifact@v1
         with:
