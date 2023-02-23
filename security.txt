@@ -1,5 +1,0 @@
-Contact: https://github.com/jirastopwatch#get-involved
-Expires: 2023-12-31T11:00:00.000Z
-Acknowledgments: https://jirastopwatch.github.io/humans.txt
-Canonical: https://jirastopwatch.github.io/security.txt
-Policy: https://github.com/jirastopwatch/jirastopwatch/security/policy
