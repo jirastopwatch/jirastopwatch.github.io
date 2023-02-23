@@ -17,16 +17,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Setup Pages
-      - uses: actions/checkout@v3
-      - uses: actions/configure-pages@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # Tidy the HTML
-      - run: sudo apt install tidy
-      - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
-      # Generate a security.txt file
-      - run: |
+      - name: Install tools
+        run: sudo apt install tidy
+
+      - name: Tidy the HTML
+        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+
+      - name: Generate a security.txt file
+        run: |
           tee -a security.txt << EOF
           Contact: https://github.com/jirastopwatch#get-involved
           Policy: https://github.com/jirastopwatch/jirastopwatch/security/policy
@@ -35,8 +39,8 @@ jobs:
           Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
           EOF
 
-      # Generate a humans.txt file
-      - run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
+      - name: Generate a humans.txt file
+        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
         env:
           TEMPLATE: |
             echo "# Contributors by Repository"
@@ -48,8 +52,8 @@ jobs:
             echo
             {{end}}
 
-      # Create a Pages Artifact
-      - uses: actions/upload-pages-artifact@v1
+      - name: Create a Pages Artifact
+        uses: actions/upload-pages-artifact@v1
         with:
           path: .
 
