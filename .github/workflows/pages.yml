@@ -10,17 +10,52 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/configure-pages@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - run: sudo apt install tidy
-      - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
-      - uses: actions/upload-pages-artifact@v1
+      - name: Install tools
+        run: sudo apt install tidy
+
+      - name: Tidy the HTML
+        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+
+      - name: Generate a security.txt file
+        run: |
+          tee -a security.txt << EOF
+          Contact: https://github.com/jirastopwatch#get-involved
+          Policy: https://github.com/jirastopwatch/jirastopwatch/security/policy
+          Acknowledgments: $(gh api /repos/${{ github.repository }} --jq '.homepage')/humans.txt
+          Canonical: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
+      - name: Generate a humans.txt file
+        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
+        env:
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed to Jira StopWatch!"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u | xargs -ILOGIN gh api /users/LOGIN --jq '"@" + .login + " (" + (.name // .login) + ")"'
+            echo
+            {{end}}
+
+      - name: Create a Pages Artifact
+        uses: actions/upload-pages-artifact@v1
         with:
           path: .
 
