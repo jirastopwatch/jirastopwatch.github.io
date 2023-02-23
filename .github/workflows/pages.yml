@@ -44,7 +44,7 @@ jobs:
             {{range .}}
             echo "## {{.full_name}}"
             echo
-            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u
+            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u | xargs -ILOGIN gh api /users/LOGIN --jq '"@" + .login + " (" + (.name // .login) + ")"'
             echo
             {{end}}
 
