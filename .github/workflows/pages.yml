@@ -14,12 +14,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Setup Pages
       - uses: actions/checkout@v3
       - uses: actions/configure-pages@v3
 
+      # Tidy the HTML
       - run: sudo apt install tidy
       - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
+      # Generate a humans.txt file
+      - run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
+        env:
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u
+            echo
+            {{end}}
+
+      # Create a Pages Artifact
       - uses: actions/upload-pages-artifact@v1
         with:
           path: .
