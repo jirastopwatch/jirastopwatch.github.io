@@ -25,6 +25,16 @@ jobs:
       - run: sudo apt install tidy
       - run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
+      # Generate a security.txt file
+      - run: |
+          tee -a security.txt << EOF
+          Contact: https://github.com/jirastopwatch#get-involved
+          Policy: https://github.com/jirastopwatch/jirastopwatch/security/policy
+          Acknowledgments: $(gh api /repos/${{ github.repository }} --jq '.homepage')/humans.txt
+          Canonical: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
       # Generate a humans.txt file
       - run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
         env:
