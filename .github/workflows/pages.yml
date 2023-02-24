@@ -24,7 +24,7 @@ jobs:
         uses: actions/configure-pages@v3
 
       - name: Install tools
-        run: sudo apt install tidy
+        run: sudo apt install tidy pandoc
 
       - name: Generate a security.txt file
         run: |
@@ -51,7 +51,7 @@ jobs:
             echo
             {{end}}
 
-      - name: Generate a changelog file
+      - name: Generate a changelog.md file
         run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a changelog.md
         env:
           TEMPLATE: |
@@ -63,6 +63,25 @@ jobs:
             {{.body}}
 
             {{end}}
+
+      - name: Create generated HTML files
+        run: |
+          make -f - << \EOF
+
+          .POSIX:
+
+          MARKDOWN = pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone
+
+          all: $(patsubst %.md,%.html,$(wildcard *.md))
+
+          clean:
+          	rm -f $(patsubst %.md,%.html,$(wildcard *.md))
+          	rm -f *.bak *~
+
+          %.html: %.md
+          	$(MARKDOWN) $< --output /$@
+
+          EOF
 
       - name: Tidy the HTML
         run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
