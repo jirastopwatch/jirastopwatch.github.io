@@ -79,7 +79,7 @@ jobs:
           	rm -f *.bak *~
 
           %.html: %.md
-          	$(MARKDOWN) $< --output /$@
+          	$(MARKDOWN) $< --output $@
 
           EOF
 
