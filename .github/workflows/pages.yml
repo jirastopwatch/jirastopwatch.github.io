@@ -54,6 +54,19 @@ jobs:
             echo
             {{end}}
 
+      - name: Generate a changelog file
+        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a CHANGELOG.md
+        env:
+          TEMPLATE: |
+            # Change Log
+
+            {{range .}}
+            ### [{{.name}}](https://github.com/jirastopwatch/jirastopwatch/releases/tag/{{.tag_name}})
+
+            {{.body}}
+
+            {{end}}
+
       - name: Create a Pages Artifact
         uses: actions/upload-pages-artifact@v1
         with:
