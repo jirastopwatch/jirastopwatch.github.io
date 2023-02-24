@@ -55,6 +55,11 @@ jobs:
         run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a changelog.md
         env:
           TEMPLATE: |
+            ---
+            lang: en
+            title: Changelog
+            ...
+
             # Change Log
 
             {{range .}}
