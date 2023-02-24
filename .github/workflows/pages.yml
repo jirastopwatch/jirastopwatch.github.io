@@ -26,9 +26,6 @@ jobs:
       - name: Install tools
         run: sudo apt install tidy
 
-      - name: Tidy the HTML
-        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
-
       - name: Generate a security.txt file
         run: |
           tee -a security.txt << EOF
@@ -55,7 +52,7 @@ jobs:
             {{end}}
 
       - name: Generate a changelog file
-        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a CHANGELOG.md
+        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a changelog.md
         env:
           TEMPLATE: |
             # Change Log
@@ -66,6 +63,9 @@ jobs:
             {{.body}}
 
             {{end}}
+
+      - name: Tidy the HTML
+        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
       - name: Create a Pages Artifact
         uses: actions/upload-pages-artifact@v1
