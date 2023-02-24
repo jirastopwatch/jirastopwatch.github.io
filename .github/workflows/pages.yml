@@ -57,7 +57,7 @@ jobs:
           TEMPLATE: |
             ---
             lang: en
-            title: Changelog
+            title-meta: Changelog
             ...
 
             # Change Log
