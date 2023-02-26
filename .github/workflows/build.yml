@@ -1,0 +1,108 @@
+name: "Build GitHub Pages"
+run-name: "Build GitHub Pages"
+
+on:
+  workflow_call:
+  push:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install tools
+        run: sudo apt install tidy pandoc
+
+      - name: Generate a security.txt file
+        run: |
+          tee security.txt << EOF
+          Contact: $(gh api /repos/${{ github.repository }} --jq '.homepage')/contact
+          Policy: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security/policy
+          Acknowledgments: $(gh api /repos/${{ github.repository }} --jq '.homepage')/humans.txt
+          Canonical: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
+      - name: Generate a humans.txt file
+        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee humans.txt
+        env:
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed to Jira StopWatch!"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u | xargs -ILOGIN gh api /users/LOGIN --jq '"- @" + .login + " (" + (.name // .login) + ")"'
+            echo
+            {{end}}
+
+      - name: Generate a changelog.md file
+        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee changelog.md
+        env:
+          TEMPLATE: |
+            ---
+            lang: en
+            title-meta: Changelog
+            ...
+
+            # Change Log
+
+            {{range .}}
+            ### [{{.name}}](https://github.com/jirastopwatch/jirastopwatch/releases/tag/{{.tag_name}})
+
+            {{.body}}
+
+            {{end}}
+
+      - name: Create generated HTML files
+        run: |
+          make -f - << \EOF
+
+          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+
+          %.html: %.md
+          	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone $< --output $@
+
+          EOF
+
+      - name: Create redirect HTML files
+        run: |
+          make -f - << \EOF
+
+          all: $(patsubst %.redirect,%.html,$(wildcard *.redirect */*.redirect */*/*.redirect))
+          	rm -f redirect.html $(wildcard *.redirect */*.redirect */*/*.redirect)
+
+          %.html: %.redirect
+          	@echo "Generating $@..."
+          	$(file > $@, $(subst {{ .REDIRECT }},$(file < $<),$(file < redirect.html)))
+
+          EOF
+
+      - name: Tidy the HTML
+        run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
+
+      - name: Archive Pages Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pages
+          path: |
+            .
+            !.git*/**
