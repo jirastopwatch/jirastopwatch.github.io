@@ -85,6 +85,7 @@ jobs:
           make -f - << \EOF
 
           all: $(patsubst %.redirect,%.html,$(wildcard *.redirect))
+          	rm -f redirect.html $(wildcard *.redirect)
 
           %.html: %.redirect
           	sed "s|{{. REDIRECT }}|$(cat $<)|g" < redirect.html > $@
