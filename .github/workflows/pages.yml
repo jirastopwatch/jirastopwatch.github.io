@@ -70,7 +70,7 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.md,%.html,$(wildcard **.md))
+          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
 
           %.html: %.md
           	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone $< --output $@
@@ -81,8 +81,8 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.redirect,%.html,$(wildcard **.redirect))
-          	rm -f redirect.html $(wildcard **.redirect)
+          all: $(patsubst %.redirect,%.html,$(wildcard *.redirect */*.redirect */*/*.redirect))
+          	rm -f redirect.html $(wildcard *.redirect */*.redirect */*/*.redirect)
 
           %.html: %.redirect
           	$(file > $@, $(subst {{ .REDIRECT }},$(file < $<),$(file < redirect.html)))
