@@ -85,6 +85,7 @@ jobs:
           	rm -f redirect.html $(wildcard *.redirect */*.redirect */*/*.redirect)
 
           %.html: %.redirect
+          	@echo "Generating $@..."
           	$(file > $@, $(subst {{ .REDIRECT }},$(file < $<),$(file < redirect.html)))
 
           EOF
