@@ -85,7 +85,7 @@ jobs:
           	rm -f redirect.html $(wildcard *.redirect)
 
           %.html: %.redirect
-          	sed "s|{{. REDIRECT }}|$(cat $<)|g" < redirect.html > $@
+          	sed "s|{{. REDIRECT }}|$(shell cat $<)|g" < redirect.html > $@
 
           EOF
 
