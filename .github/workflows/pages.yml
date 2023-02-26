@@ -73,18 +73,21 @@ jobs:
         run: |
           make -f - << \EOF
 
-          .POSIX:
-
-          MARKDOWN = pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone
-
           all: $(patsubst %.md,%.html,$(wildcard *.md))
 
-          clean:
-          	rm -f $(patsubst %.md,%.html,$(wildcard *.md))
-          	rm -f *.bak *~
-
           %.html: %.md
-          	$(MARKDOWN) $< --output $@
+          	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone $< --output $@
+
+          EOF
+
+      - name: Create redirect HTML files
+        run: |
+          make -f - << \EOF
+
+          all: $(patsubst %.redirect,%.html,$(wildcard *.redirect))
+
+          %.html: %.redirect
+          	sed "s|{{. REDIRECT }}|$(cat $<)|g" < redirect.html > $@
 
           EOF
 
