@@ -4,7 +4,7 @@ run-name: "Deploy GitHub Pages"
 on:
   workflow_dispatch:
   push:
-    #branches: [main]
+    branches: [main]
 
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref_name == 'main'
     needs: build
     runs-on: ubuntu-latest
 
