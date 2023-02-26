@@ -4,6 +4,7 @@ run-name: "Build GitHub Pages"
 on:
   workflow_call:
   push:
+    branches-ignore: [main]
   pull_request:
     branches: [main]
     types:
