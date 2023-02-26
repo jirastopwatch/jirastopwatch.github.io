@@ -1,0 +1,49 @@
+name: "Deploy GitHub Pages"
+run-name: "Deploy GitHub Pages"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  deploy:
+    if: github.ref_name == 'main'
+    needs: build
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Unarchive Pages Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pages
+
+      - name: Create a Pages Artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
+
+      - name: Deploy Pages
+        uses: actions/deploy-pages@v1
