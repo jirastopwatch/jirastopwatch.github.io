@@ -96,7 +96,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pages
-          path: .
+          path: |
+            .
+            !.git*/**
 
   deploy:
     if: github.ref == 'refs/heads/main'
