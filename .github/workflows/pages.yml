@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate a security.txt file
         run: |
-          tee -a security.txt << EOF
+          tee security.txt << EOF
           Contact: https://github.com/jirastopwatch#get-involved
           Policy: https://github.com/jirastopwatch/jirastopwatch/security/policy
           Acknowledgments: $(gh api /repos/${{ github.repository }} --jq '.homepage')/humans.txt
@@ -34,7 +34,7 @@ jobs:
           EOF
 
       - name: Generate a humans.txt file
-        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee -a humans.txt
+        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee humans.txt
         env:
           TEMPLATE: |
             echo "# Contributors by Repository"
@@ -49,7 +49,7 @@ jobs:
             {{end}}
 
       - name: Generate a changelog.md file
-        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee -a changelog.md
+        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee changelog.md
         env:
           TEMPLATE: |
             ---
