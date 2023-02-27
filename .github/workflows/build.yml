@@ -92,7 +92,7 @@ jobs:
           all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
 
           %.html: %.md
-          	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes --to html --standalone $< --output $@
+          	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji --to html --standalone $< --output $@
 
           EOF
 
