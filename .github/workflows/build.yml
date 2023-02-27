@@ -73,6 +73,18 @@ jobs:
 
             {{end}}
 
+      - name: Retrieve Code of Conduct
+        run: curl -H "${MEDIA_TYPE_HEADER}" -H "${AUTH_TOKEN_HEADER}" -o code-of-conduct.md https://api.github.com/repos/jirastopwatch/.github/contents/CODE_OF_CONDUCT.md
+        env:
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - name: Retrieve Contribution Guidlines
+        run: curl -H "${MEDIA_TYPE_HEADER}" -H "${AUTH_TOKEN_HEADER}" -o contributing.md https://api.github.com/repos/jirastopwatch/.github/contents/CONTRIBUTING.md
+        env:
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
       - name: Create generated HTML files
         run: |
           make -f - << \EOF
