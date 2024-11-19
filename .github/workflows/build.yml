@@ -65,7 +65,7 @@ jobs:
             ...
 
             {{range .}}
-            ## [{{.name}}](https://${{ github.server_url }}/${{ vars.REPO_WITH_RELEASES }}/releases/tag/{{.tag_name}})
+            ## [{{.name}}](${{ github.server_url }}/${{ vars.REPO_WITH_RELEASES }}/releases/tag/{{.tag_name}})
 
             {{.body}}
 
