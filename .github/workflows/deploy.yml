@@ -3,6 +3,8 @@ run-name: "Deploy GitHub Pages"
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
   push:
     branches: [main]
 
