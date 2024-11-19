@@ -32,18 +32,65 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Setup Pages
+      - id: configure-pages
+        name: "Setup Pages"
         uses: actions/configure-pages@v3
         
-      - name: Unarchive Pages Artifact
+      - name: "Unarchive Pages Artifact"
         uses: actions/download-artifact@v4.1.7
         with:
           name: pages
 
-      - name: Create a Pages Artifact
+      - name: "Generate a security.txt file"
+        run: |
+          tee security.txt << EOF
+          Contact: ${{ steps.configure-pages.outputs.base_url }}/contact
+          Policy: ${{ steps.configure-pages.outputs.base_url }}/security/policy
+          Acknowledgments: ${{ steps.configure-pages.outputs.base_url }}/humans.txt
+          Canonical: ${{ steps.configure-pages.outputs.base_url }}/security.txt
+          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          EOF
+
+      - name: "Generate a humans.txt file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.txt
+        env:
+          ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed on GitHub!"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq '"- @" + .login + " (" + (.name // .login) + ")"'
+            echo
+            {{end}}
+
+      - name: "Generate a robots.txt file"
+        run: |
+          tee robots.txt << EOF
+          Sitemap: ${{ steps.configure-pages.outputs.base_url }}/sitemap.txt
+          EOF
+
+      - name: "Generate a version.txt file"
+        run: |
+          tee version.txt << EOF
+          Deployed: $(date --universal +'%FT%TZ')
+          Version: v0.0.${{ github.run_number }}.$((${{ github.run_attempt }} - 1))
+          Source: ${{ github.server_url }}/${{ github.repository }}/tree/$(echo "${{ github.sha }}" | head -c 7)
+          EOF
+
+      - name: "Generate a sitemap.txt file"
+        env: { BASE_URL: '${{ steps.configure-pages.outputs.base_url }}' }
+        run: |
+          touch sitemap.txt # this ensures that the sitemap detects itself
+          find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee -a sitemap.txt
+
+      - name: "Create a Pages Artifact"
         uses: actions/upload-pages-artifact@v1
         with:
           path: .
 
-      - name: Deploy Pages
+      - name: "Deploy Pages"
         uses: actions/deploy-pages@v1

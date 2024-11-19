@@ -5,14 +5,6 @@ on:
   workflow_call:
   push:
     branches-ignore: [main]
-  pull_request:
-    branches: [main]
-    types:
-      - opened
-      - edited
-      - reopened
-      - synchronize
-      - ready_for_review
 
 permissions:
   contents: read
@@ -24,68 +16,57 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: "Checkout"
         uses: actions/checkout@v3
 
-      - name: Install tools
+      - name: "Install tools"
         run: sudo apt install tidy pandoc
 
-      - name: Generate a security.txt file
-        run: |
-          tee security.txt << EOF
-          Contact: $(gh api /repos/${{ github.repository }} --jq '.homepage')/contact
-          Policy: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security/policy
-          Acknowledgments: $(gh api /repos/${{ github.repository }} --jq '.homepage')/humans.txt
-          Canonical: $(gh api /repos/${{ github.repository }} --jq '.homepage')/security.txt
-          Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
-          EOF
-
-      - name: Generate a humans.txt file
-        run: gh api /orgs/jirastopwatch/repos --template "${TEMPLATE}" | sh | tee humans.txt
+      - name: "Retrieve Code of Conduct"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output code-of-conduct.md "${CONTENTS_ENDPOINT}/CODE_OF_CONDUCT.md"
         env:
-          TEMPLATE: |
-            echo "# Contributors by Repository"
-            echo
-            echo "A huge thanks to all and colaborators who have contributed to Jira StopWatch!"
-            echo
-            {{range .}}
-            echo "## {{.full_name}}"
-            echo
-            gh api /repos/{{.full_name}}/contributors --jq '.[].login' | sort -u | xargs -ILOGIN gh api /users/LOGIN --jq '"- @" + .login + " (" + (.name // .login) + ")"'
-            echo
-            {{end}}
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
 
-      - name: Generate a changelog.md file
-        run: gh api /repos/jirastopwatch/jirastopwatch/releases --template "${TEMPLATE}" | tee changelog.md
+      - name: "Retrieve Security Policy"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output security/policy.md "${CONTENTS_ENDPOINT}/SECURITY.md"
         env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - name: "Retrieve Contribution Guidlines"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output contributing.md "${CONTENTS_ENDPOINT}/CONTRIBUTING.md"
+        env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
+      - name: "Generate an authors.yaml file"
+        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
+        env:
+          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/contributors'
+          JQ_QUERY: '"author-meta:" + (["", (.[] | .login)] | join("\n- "))'
+
+      - name: "Generate a changelog.md file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | tee changelog.md
+        env:
+          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/releases'
           TEMPLATE: |
             ---
             lang: en
-            title-meta: Changelog
+            title: Changelog
             ...
 
-            # Change Log
-
             {{range .}}
-            ### [{{.name}}](https://github.com/jirastopwatch/jirastopwatch/releases/tag/{{.tag_name}})
+            ## [{{.name}}](https://${{ github.server_url }}/${{ vars.REPO_WITH_RELEASES }}/releases/tag/{{.tag_name}})
 
             {{.body}}
 
             {{end}}
 
-      - name: Retrieve Code of Conduct
-        run: curl -H "${MEDIA_TYPE_HEADER}" -H "${AUTH_TOKEN_HEADER}" -o code-of-conduct.md https://api.github.com/repos/jirastopwatch/.github/contents/CODE_OF_CONDUCT.md
-        env:
-          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
-          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
-
-      - name: Retrieve Contribution Guidlines
-        run: curl -H "${MEDIA_TYPE_HEADER}" -H "${AUTH_TOKEN_HEADER}" -o contributing.md https://api.github.com/repos/jirastopwatch/.github/contents/CONTRIBUTING.md
-        env:
-          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
-          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
-
-      - name: Create generated HTML files
+      - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
 
@@ -96,7 +77,7 @@ jobs:
 
           EOF
 
-      - name: Create redirect HTML files
+      - name: "Create redirect HTML files"
         run: |
           make -f - << \EOF
 
@@ -109,13 +90,15 @@ jobs:
 
           EOF
 
-      - name: Tidy the HTML
+      - name: "Tidy the HTML"
         run: find . -name '*.html' | xargs tidy -indent --wrap 0 --output-html yes --warn-proprietary-attributes no -quiet -modify
 
-      - name: Archive Pages Artifact
+      - name: "Archive Pages Artifact"
         uses: actions/upload-artifact@v4
         with:
           name: pages
           path: |
             .
+            !CNAME
+            !.nojekyll
             !.git*/**
