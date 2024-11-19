@@ -22,6 +22,11 @@ jobs:
       - name: "Install tools"
         run: sudo apt install tidy pandoc
 
+      - name: "Install templates"
+        run: |
+          mkdir -p ~/.pandoc/templates
+          curl -sSL 'https://github.com/tajmone/pandoc-goodies/raw/refs/heads/master/templates/html5/github/GitHub.html5' -o ~/.pandoc/templates/GitHub.html5
+
       - name: "Retrieve Code of Conduct"
         run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output code-of-conduct.md "${CONTENTS_ENDPOINT}/CODE_OF_CONDUCT.md"
         env:
@@ -71,9 +76,10 @@ jobs:
           make -f - << \EOF
 
           all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+          	rm -f header.html
 
           %.html: %.md
-          	pandoc --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji --to html --standalone $< --output $@
+          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji --to html --standalone $< --output $@
 
           EOF
 
