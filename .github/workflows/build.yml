@@ -86,13 +86,18 @@ jobs:
             {{- end }}
 
             {{ .body }}
-            {{ if .assets }}
+
+            {{ if .assets -}}
+
             ### Asset Downloads
 
-            {{ range .assets }}- [{{ or .label .name }}]({{ .browser_download_url }})
+            {{ range .assets }}
+            - [{{ or .label .name }}]({{ .browser_download_url }})
             {{ end }}
-            {{ end }}
-            {{ end }}
+
+            {{- end }}
+
+            {{- end }}
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
