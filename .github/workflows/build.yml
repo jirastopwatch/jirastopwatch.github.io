@@ -71,6 +71,27 @@ jobs:
 
             {{end}}
 
+      - name: "Update Changelog - Replace Usernames with Display Names"
+        run: |
+          for LOGIN in $(grep -o '@[a-zA-Z0-9-]\+' changelog.md | sort | uniq | tr -d '@')
+          do
+            echo "::group::Replace @${LOGIN}"
+
+            # Look up the contributor's name by login
+            if gh api "/users/${LOGIN}" --jq '.name // ("@" + .login)' > display_name.txt
+            then
+              # Edit the release notes file in place, replacing the login with fullname
+              sed -i -e "s/@${LOGIN}/$(cat display_name.txt)/gi" changelog.md
+            else
+              echo "::error::Invalid user login: ${LOGIN}"
+            fi
+
+            # Clean up last run
+            rm display_name.txt
+
+            echo "::endgroup::"
+          done
+
       - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
