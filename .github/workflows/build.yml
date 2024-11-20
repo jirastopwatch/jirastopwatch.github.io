@@ -101,7 +101,7 @@ jobs:
 
             {{- end }}
 
-            {{- "\n" -}}
+            {{- /* noop */ -}}
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
