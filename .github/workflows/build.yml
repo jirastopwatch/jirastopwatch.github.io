@@ -65,9 +65,7 @@ jobs:
             ...
 
             {{range .}}
-            ## [{{.name}}]({{.html_url}})
-
-            {{if .draft}}![This is a draft release.](https://img.shields.io/badge/DRAFT-orange){{else if .prerelease}}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange){{end}}
+            ## [{{.name}}]({{.html_url}}) {{if .draft}}![This is a draft release.](https://img.shields.io/badge/DRAFT-orange){{else if .prerelease}}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange){{end}}
 
             {{.body}}
 
