@@ -65,7 +65,10 @@ jobs:
             ...
 
             {{range .}}
-            ## [{{.name}}](${{ github.server_url }}/${{ vars.REPO_WITH_RELEASES }}/releases/tag/{{.tag_name}})
+            ## [{{.name}}]({{.html_url}})
+
+            {{if .draft}}![DRAFT](https://img.shields.io/badge/DRAFT-orange){{end}}
+            {{if .prerelease}}![PRE-RELEASE](https://img.shields.io/badge/PRE--RELEASE-orange){{end}}
 
             {{.body}}
 
