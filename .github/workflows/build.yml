@@ -81,7 +81,7 @@ jobs:
             ![This is a draft release.](https://img.shields.io/badge/DRAFT-grey)
             {{- else if .prerelease -}}
             ![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
-            {{- else if .tag_name eq "${{ steps.outputs.latest-release.tag_name }}" -}}
+            {{- else if eq .tag_name "${{ steps.latest-release.outputs.tag_name }}" -}}
             ![This is the latest release.](https://img.shields.io/badge/LATEST-green)
             {{- end }}
 
