@@ -82,6 +82,8 @@ jobs:
             then
               # Edit the release notes file in place, replacing the login with fullname
               sed -i -e "s/@${LOGIN}/$(cat display_name.txt)/gi" changelog.md
+
+              echo "Replaced with $(cat display_name.txt)"
             else
               echo "::error::Invalid user login: ${LOGIN}"
             fi
@@ -91,6 +93,8 @@ jobs:
 
             echo "::endgroup::"
           done
+
+          cat changelog.md
 
       - name: "Create generated HTML files"
         run: |
