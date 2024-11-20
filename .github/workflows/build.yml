@@ -48,6 +48,13 @@ jobs:
           MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
           AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
 
+      - id: latest-release
+        name: "Get Details of Latest Release"
+        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
+        env:
+          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/releases/latest'
+          JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
+
       - name: "Generate an authors.yaml file"
         run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
         env:
@@ -71,9 +78,11 @@ jobs:
             ## [{{.name}}]({{ .html_url }})
 
             {{- if .draft -}}
-            ![This is a draft release.](https://img.shields.io/badge/DRAFT-orange)
+            ![This is a draft release.](https://img.shields.io/badge/DRAFT-grey)
             {{- else if .prerelease -}}
             ![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
+            {{- else if .tag_name eq "${{ steps.outputs.latest-release.tag_name }}" -}}
+            ![This is the latest release.](https://img.shields.io/badge/LATEST-green)
             {{- end }}
 
             {{ .body }}
