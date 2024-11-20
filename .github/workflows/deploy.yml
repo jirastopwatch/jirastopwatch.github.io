@@ -29,14 +29,15 @@ jobs:
     name: "Build GitHub Pages"
     uses: ./.github/workflows/build.yml
 
-  debug-github-context:
-    name: "Debug ${{ format('{0}{1}{1} {2} {3}{3}', '$', '{', 'github', '}') }} context"
+  debug:
+    name: "Debug"
     runs-on: ubuntu-latest
     steps:
-      - name: "Debug ${{ format('{0}{1}{1} {2} {3}{3}', '$', '{', 'github', '}') }} context"
-        run: echo "${GITHUB_CONTEXT}"
+      - name: "Debug"
+        run: echo "${DEBUG}"
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
+          DEBUG: |
+            ${{ format('github.event_name: {0}, github.client_payload.repository: {1}, vars.REPO_WITH_RELEASES: {2}', github.event_name, github.client_payload.repository, vars.REPO_WITH_RELEASES) }}
 
   deploy:
     if: ${{ github.event_name != 'repository_dispatch' || github.client_payload.repository == vars.REPO_WITH_RELEASES }} # Only deploy from dispatch events from the main repo, (or from events in this repo), otherwise ignore.
