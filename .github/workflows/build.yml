@@ -89,7 +89,8 @@ jobs:
             {{ if .assets }}
             ### Asset Downloads
 
-            {{ range .assets }}- [{{ or .label .name }}]({{ .browser_download_url }}){{ "\n" }}{{ end }}
+            {{ range .assets }}- [{{ or .label .name }}]({{ .browser_download_url }})
+            {{ end }}
             {{ end }}
             {{ end }}
 
