@@ -100,7 +100,7 @@ jobs:
           find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee -a sitemap.txt
 
       - name: "Create a Pages Artifact"
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
