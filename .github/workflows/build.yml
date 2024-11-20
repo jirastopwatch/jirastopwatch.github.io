@@ -73,8 +73,7 @@ jobs:
 
             Please visit [https://www.jirastopwatch.com] for full introduction of JiraStopWatch and documentation.
 
-            {{- range . }}
-
+            {{ range . }}
             ## [{{.name}}]({{ .html_url }})
 
             {{- if .draft -}}
@@ -86,18 +85,12 @@ jobs:
             {{- end }}
 
             {{ .body }}
-
-            {{- if .assets }}
-
+            {{ if .assets }}
             ### Asset Downloads
 
-            {{ range .assets -}}
-            - [{{ .name }}]({{ .browser_download_url }})
-            {{ end -}}
-
-            {{- end }}
-
-            {{- end }}
+            {{ range .assets }}- [{{ or .label .name }}]({{ .browser_download_url }}){{ "\n" }}{{ end }}
+            {{ end }}
+            {{ end }}
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
