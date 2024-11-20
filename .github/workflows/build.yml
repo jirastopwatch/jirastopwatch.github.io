@@ -48,6 +48,13 @@ jobs:
           MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
           AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
 
+      - id: latest-release
+        name: "Get Details of Latest Release"
+        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
+        env:
+          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/releases/latest'
+          JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
+
       - name: "Generate an authors.yaml file"
         run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
         env:
@@ -66,13 +73,35 @@ jobs:
 
             Please visit [https://www.jirastopwatch.com] for full introduction of JiraStopWatch and documentation.
 
-            {{range . -}}
+            {{ range . -}}
 
-            ## [{{.name}}]({{.html_url}}) {{if .draft}}![This is a draft release.](https://img.shields.io/badge/DRAFT-orange){{else if .prerelease}}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange){{end}}
+            ## [{{.name}}]({{ .html_url }})
 
-            {{.body}}
+            {{- if .draft -}}
+            {{ " " }}![This is a draft release.](https://img.shields.io/badge/DRAFT-grey)
+            {{- else if .prerelease -}}
+            {{ " " }}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
+            {{- else if eq .tag_name "${{ steps.latest-release.outputs.tag_name }}" -}}
+            {{ " " }}![This is the latest release.](https://img.shields.io/badge/LATEST-green)
+            {{- end }}
 
-            {{end -}}
+            {{ .body }}
+
+            {{ if .assets -}}
+
+            ### Asset Downloads
+
+            {{- "\n" -}}
+
+            {{ range .assets }}
+            - [{{ or .label .name }}]({{ .browser_download_url }})
+            {{- end }}
+
+            {{ end }}
+
+            {{- end }}
+
+            {{- /* noop */ -}}
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
