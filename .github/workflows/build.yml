@@ -101,6 +101,8 @@ jobs:
 
             {{- end }}
 
+            {{- "\n" -}}
+
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
       - name: "Create generated HTML files"
