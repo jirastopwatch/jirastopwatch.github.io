@@ -69,7 +69,7 @@ jobs:
             {{- range . }}
 
             ## [{{.name}}]({{ .html_url }})
-            
+
             {{- if .draft -}}
             ![This is a draft release.](https://img.shields.io/badge/DRAFT-orange)
             {{- else if .prerelease -}}
