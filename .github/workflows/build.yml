@@ -66,7 +66,7 @@ jobs:
 
             Please visit [https://www.jirastopwatch.com] for full introduction of JiraStopWatch and documentation.
 
-            {{ range . -}}
+            {{ range . }}
 
             ## [{{.name}}]({{ .html_url }})
 
@@ -76,19 +76,19 @@ jobs:
             ![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
             {{- end }}
 
-            {{ .body -}}
+            {{ .body }}
 
             {{ if .assets }}
 
             ### Asset Downloads
 
-            {{ range .assets -}}
+            {{ range .assets }}
             - [{{ .name }}]({{ .browser_download_url }})
-            {{ end -}}
+            {{ end }}
 
-            {{ end -}}
+            {{ end }}
 
-            {{ end -}}
+            {{ end }}
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
