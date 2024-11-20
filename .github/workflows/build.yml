@@ -91,7 +91,7 @@ jobs:
 
             ### Asset Downloads
 
-            {{- /* noop  */ -}}
+            {{- "\n" -}}
 
             {{ range .assets }}
             - [{{ or .label .name }}]({{ .browser_download_url }})
