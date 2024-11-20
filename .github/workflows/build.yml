@@ -78,7 +78,7 @@ jobs:
 
             {{ .body }}
 
-            {{ if .assets }}
+            {{- if .assets }}
 
             ### Asset Downloads
 
