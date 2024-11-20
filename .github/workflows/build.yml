@@ -79,7 +79,7 @@ jobs:
           	rm -f header.html
 
           %.html: %.md
-          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji --to html --standalone $< --output $@
+          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures --to html --standalone $< --output $@
 
           EOF
 
