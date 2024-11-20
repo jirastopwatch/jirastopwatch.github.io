@@ -78,11 +78,11 @@ jobs:
 
             {{ .body -}}
 
-            {{ if .assets -}}
+            {{ if .assets }}
 
             ### Asset Downloads
 
-            {{ range .assets }}
+            {{ range .assets -}}
             - [{{ .name }}]({{ .browser_download_url }})
             {{ end -}}
 
