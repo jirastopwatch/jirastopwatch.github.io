@@ -73,7 +73,8 @@ jobs:
 
             Please visit [https://www.jirastopwatch.com] for full introduction of JiraStopWatch and documentation.
 
-            {{ range . }}
+            {{ range . -}}
+
             ## [{{.name}}]({{ .html_url }})
 
             {{- if .draft -}}
