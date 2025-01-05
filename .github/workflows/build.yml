@@ -110,14 +110,17 @@ jobs:
         run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.md
         env:
           ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
-          JQ_QUERY: '"- " + (.name // .login) + " ([@" + .login + "](" + .html_url + "))"'
+          JQ_QUERY: '"- " + (.name // .login) + " (aka [@" + .login + "](" + .html_url + ") on GitHub)"'
           TEMPLATE: |
-            echo "# Contributors by Repository"
+            echo "# Humans of ${{ github.repository_owner }}"
             echo
             echo "A huge thanks to all and colaborators who have contributed on GitHub!"
             echo
             {{range .}}
-            echo "## {{.full_name}}"
+            echo "## Contributors to the {{.full_name}} Repo"
+            {{if .description}}
+            echo "{{.description}}"
+            {{end}}
             echo
             gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
             echo
