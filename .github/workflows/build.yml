@@ -110,7 +110,7 @@ jobs:
         run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.md
         env:
           ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
-          JQ_QUERY: '"- " + (.name // .login) + " aka [&commat;" + .login + "](" + .html_url + ")"'
+          JQ_QUERY: '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ")"'
           TEMPLATE: |
             echo "# Humans to Thank"
             echo
@@ -131,7 +131,7 @@ jobs:
           	rm -f header.html
 
           %.html: %.md
-          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris --to html --standalone $< --output $@
+          	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures+shortcut_reference_links+spaced_reference_links+autolink_bare_uris-citations --to html --standalone $< --output $@
 
           %.txt: %.md
           	pandoc --from markdown --to plain --wrap=none $< --output $@
