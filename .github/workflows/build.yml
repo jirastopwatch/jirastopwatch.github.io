@@ -127,11 +127,14 @@ jobs:
         run: |
           make -f - << \EOF
 
-          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md)) humans.txt
           	rm -f header.html
 
           %.html: %.md
           	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures --to html --standalone $< --output $@
+
+          %.txt: %.md
+          	pandoc -f markdown -t plain --wrap=none $< --output $@
 
           EOF
 
