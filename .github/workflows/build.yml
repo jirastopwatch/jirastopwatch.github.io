@@ -110,7 +110,7 @@ jobs:
         run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.md
         env:
           ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
-          JQ_QUERY: '"- " + (.name // .login) + " (aka [@" + .login + "](" + .html_url + ") on GitHub)"'
+          JQ_QUERY: '"- " + (.name // .login) + " aka [@" + .login + "](" + .html_url + ") on GitHub"'
           TEMPLATE: |
             echo "# Humans to Thank"
             echo
