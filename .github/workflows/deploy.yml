@@ -47,7 +47,16 @@ jobs:
       - id: configure-pages
         name: "Setup Pages"
         uses: actions/configure-pages@v5
-        
+
+      - name: "Setup Environment"
+        run: |
+          tee "${GITHUB_ENV}" << EOF
+          BASE_URL=${{ steps.configure-pages.outputs.base_url }}
+          PAGES_ORIGIN=${{ steps.configure-pages.outputs.origin }}
+          PAGES_HOST=${{ steps.configure-pages.outputs.host }}
+          BASE_PATH=${{ steps.configure-pages.outputs.base_path }}
+          EOF
+
       - name: "Unarchive Pages Artifact"
         uses: actions/download-artifact@v4
         with:
@@ -56,17 +65,17 @@ jobs:
       - name: "Generate a security.txt file"
         run: |
           tee security.txt << EOF
-          Contact: ${{ steps.configure-pages.outputs.base_url }}/contact
-          Policy: ${{ steps.configure-pages.outputs.base_url }}/security/policy
-          Acknowledgments: ${{ steps.configure-pages.outputs.base_url }}/humans.txt
-          Canonical: ${{ steps.configure-pages.outputs.base_url }}/security.txt
+          Contact: ${BASE_URL}/contact
+          Policy: ${BASE_URL}/security/policy
+          Acknowledgments: ${BASE_URL}/humans
+          Canonical: ${BASE_URL}/security.txt
           Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
           EOF
 
       - name: "Generate a robots.txt file"
         run: |
           tee robots.txt << EOF
-          Sitemap: ${{ steps.configure-pages.outputs.base_url }}/sitemap.txt
+          Sitemap: ${BASE_URL}/sitemap.txt
           EOF
 
       - name: "Generate a version.txt file"
@@ -78,7 +87,6 @@ jobs:
           EOF
 
       - name: "Generate a sitemap.txt file"
-        env: { BASE_URL: '${{ steps.configure-pages.outputs.base_url }}' }
         run: |
           touch sitemap.txt # this ensures that the sitemap detects itself
           find . -type f -printf "${BASE_URL}/%P\n" | sed -e 's/\(\.html\)*$//g' | sort --unique | tee -a sitemap.txt
