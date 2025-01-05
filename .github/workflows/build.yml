@@ -117,7 +117,7 @@ jobs:
             echo "A huge thanks to all and colaborators who have contributed on GitHub!"
             echo
             {{range .}}
-            echo "## Contributors [{{.full_name}}]({{.html_url}})"
+            echo "## Contributors to [{{.full_name}}]({{.html_url}})"
             echo
             gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
             echo
