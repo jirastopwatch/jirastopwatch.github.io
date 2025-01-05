@@ -106,6 +106,23 @@ jobs:
 
             [https://www.jirastopwatch.com]: https://www.jirastopwatch.com
 
+      - name: "Generate a humans.md file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.md
+        env:
+          ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
+          JQ_QUERY: '"- " + (.name // .login) + " ([@" + .login + "](" + .html_url + "))"'
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed on GitHub!"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
+            echo
+            {{end}}
+
       - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
