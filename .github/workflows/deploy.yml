@@ -75,6 +75,10 @@ jobs:
       - name: "Generate a robots.txt file"
         run: |
           tee robots.txt << EOF
+          # Block AI Crawlers (see: https://github.com/ai-robots-txt)
+          $(gh release download --repo ai-robots-txt/ai.robots.txt --pattern 'robots.txt' --output -)
+
+          # List of pages and files
           Sitemap: ${BASE_URL}/sitemap.txt
           EOF
 
