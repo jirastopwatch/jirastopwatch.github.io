@@ -112,15 +112,12 @@ jobs:
           ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
           JQ_QUERY: '"- " + (.name // .login) + " (aka [@" + .login + "](" + .html_url + ") on GitHub)"'
           TEMPLATE: |
-            echo "# Humans of ${{ github.repository_owner }}"
+            echo "# Humans to Thank"
             echo
             echo "A huge thanks to all and colaborators who have contributed on GitHub!"
             echo
             {{range .}}
             echo "## Contributors to the {{.full_name}} Repo"
-            {{if .description}}
-            echo "{{.description}}"
-            {{end}}
             echo
             gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
             echo
