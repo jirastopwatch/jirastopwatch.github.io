@@ -48,6 +48,13 @@ jobs:
           MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
           AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
 
+      - name: "Retrieve License"
+        run: curl --header "${MEDIA_TYPE_HEADER}" --header "${AUTH_TOKEN_HEADER}" --create-dirs --output license.md "${CONTENTS_ENDPOINT}/LICENSE.md"
+        env:
+          CONTENTS_ENDPOINT: '${{ github.api_url }}/repos/${{ github.repository_owner }}/.github/contents'
+          MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
+          AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
+
       - id: latest-release
         name: "Get Details of Latest Release"
         run: gh release view --json "${JQ_PROPS}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
