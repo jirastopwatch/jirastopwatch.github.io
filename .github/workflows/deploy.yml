@@ -58,7 +58,7 @@ jobs:
           EOF
 
       - name: "Unarchive Pages Artifact"
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: pages
 
@@ -70,6 +70,9 @@ jobs:
           Acknowledgments: ${BASE_URL}/humans
           Canonical: ${BASE_URL}/security.txt
           Expires: $(date -u +"%Y-12-31T23:59:59.999Z")
+          Preferred-Languages: en, eo, ru
+          Bug-Bounty: False
+          Hiring: ${BASE_URL}/contributing
           EOF
 
       - name: "Generate a robots.txt file"
