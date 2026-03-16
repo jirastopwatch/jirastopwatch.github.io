@@ -126,7 +126,7 @@ jobs:
             {{range .}}
             echo "## Contributors to [{{.full_name}}]({{.html_url}})"
             echo
-            gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
+            gh api '/repos/{{.full_name}}/contributors' --paginate --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq "${JQ_QUERY}"
             echo
             {{end}}
 
